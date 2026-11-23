@@ -106,19 +106,19 @@ a quote for longer drives.
 
 ### On a Mac
 
-There is no single installer for the Mac: the author's environment was built up stage by stage. Each stage README
-lists its environment, and [pipeline/cuda/setup-drive.sh](pipeline/cuda/setup-drive.sh) is the most complete list
-of what to install and build (use Homebrew where it uses apt).
+[pipeline/run/setup-mac.sh](pipeline/run/setup-mac.sh) builds the same layout as the Linux script: it installs any
+missing Homebrew packages ([Brewfile](Brewfile)), creates `.venv`, `envs/stitch` and `envs/genfill` with uv, clones
+the pinned upstream code, builds the solvers, helpers, viewer and chase tool, and checks that PyTorch sees the GPU.
+Add `--models` to download the pinned weights (about 12 GB; several are non-commercial). It was tested on an M3 Max
+with 128 GB; the author's own environment was built up stage by stage, as each stage README describes.
 
-1. Build the viewer and leave a local host running (the runner checks every publication through it):
+1. Run `bash pipeline/run/setup-mac.sh --models` and put the rig in `calib/`.
+2. Leave a local host running for the built viewer (the runner checks every publication through it):
 
    ```sh
-   cd viewer && bun install && bun run build && cd ..
    mkdir -p scene
    bun deploy/serve.ts viewer/dist scene 8090 127.0.0.1
    ```
-
-2. Create `.venv` and the stage environments, build the solvers and helpers, and put the rig in `calib/`.
 3. Run the pipeline from the repository root:
 
    ```sh
